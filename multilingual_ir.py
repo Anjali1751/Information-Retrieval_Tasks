@@ -114,7 +114,7 @@ def process_documents(documents: Mapping[str, str] = DOCUMENTS) -> dict[str, Lan
 
 
 def summary(results: Mapping[str, LanguageResult]) -> list[dict[str, int | str]]:
-    return [{"Language": result.language, "Total Raw Tokens": len(result.raw_tokens), "Processed Roots": len(result.processed_tokens), "Unique Roots": len(set(result.processed_tokens))} for result in results.values()]
+    return [{"Language": result.language, "Input Token Count": len(result.raw_tokens), "Output Token Count": len(result.processed_tokens), "Unique Output Tokens": len(set(result.processed_tokens))} for result in results.values()]
 
 
 def main() -> None:
@@ -123,7 +123,7 @@ def main() -> None:
     args = parser.parse_args()
     results = process_documents()
     for row in summary(results):
-        print(f"{row['Language']}: {row['Total Raw Tokens']} raw -> {row['Processed Roots']} processed ({row['Unique Roots']} unique)")
+        print(f"{row['Language']}: input={row['Input Token Count']} tokens -> output={row['Output Token Count']} tokens ({row['Unique Output Tokens']} unique)")
     if args.json:
         args.json.write_text(json.dumps({name: asdict(result) for name, result in results.items()}, ensure_ascii=False, indent=2), encoding="utf-8")
 
